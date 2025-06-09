@@ -1,0 +1,70 @@
+Projeto: Implementação e Teste de Padrões de Projeto (Factory Method e Decorator)
+
+
+1. Introdução
+Este relatório fornece uma análise técnica detalhada do código-fonte C++ contido no ficheiro testes.cpp. O objetivo principal do código é implementar e validar, através de testes unitários, a correta aplicação de dois padrões de projeto fundamentais: o Factory Method e o Decorator. O documento irá dissecar a estrutura do código, a lógica de cada padrão e o propósito de cada teste para fornecer uma compreensão completa da sua arquitetura e funcionamento.
+
+2. Análise da Estrutura do Código-Fonte
+O código está organizado em três seções principais:
+
+Implementação dos Padrões de Projeto: Contém as classes que definem a arquitetura dos padrões Factory Method e Decorator.
+
+Infraestrutura de Testes: Inclui classes de suporte (Mocks) para facilitar a verificação do comportamento dos padrões.
+
+Suíte de Testes e Execução: Funções de teste dedicadas para cada cenário e a função main que orquestra a execução.
+
+2.1. Implementação do Padrão Factory Method
+Este padrão é utilizado para encapsular a criação de objetos. O código implementa-o para a geração de diferentes tipos de relatórios.
+
+Relatorio (Interface do Produto): É uma classe abstrata que define a interface comum para todos os relatórios, com o método virtual puro gerar(). Qualquer relatório no sistema deve seguir este contrato.
+
+RelatorioPaciente e RelatorioFinanceiro (Produtos Concretos): São as implementações específicas que herdam de Relatorio. Cada uma implementa o método gerar() para produzir a sua saída específica.
+
+GeradorRelatorioFactory (Interface da Fábrica): É a classe abstrata da fábrica. Define o "método de fábrica" (criarRelatorio()) que as subclasses devem implementar para criar os objetos Relatorio.
+
+GeradorRelatorioPacienteFactory e GeradorRelatorioFinanceiroFactory (Fábricas Concretas): São as fábricas que efetivamente criam os objetos. Cada uma implementa criarRelatorio() para retornar uma instância do seu produto correspondente (ex: GeradorRelatorioPacienteFactory cria um RelatorioPaciente).
+
+Conclusão da Análise: A implementação segue corretamente o padrão, desacoplando o código cliente da criação de relatórios específicos. Para adicionar um novo tipo de relatório, bastaria criar uma nova classe de relatório e uma nova fábrica, sem alterar o código existente.
+
+2.2. Implementação do Padrão Decorator
+Este padrão é utilizado para adicionar funcionalidades a um objeto dinamicamente. No código, ele é usado para adicionar responsabilidades a uma Consulta.
+
+Consulta (Componente): A interface base para uma consulta, com o método virtual puro executar().
+
+ConsultaBasica (Componente Concreto): A implementação mais simples de uma Consulta.
+
+ConsultaDecorator (Decorador Abstrato): Uma classe abstrata que herda de Consulta e "envelopa" (contém um ponteiro para) outro objeto do tipo Consulta. A sua função é delegar a chamada do método executar() ao objeto que está a decorar.
+
+NotificacaoDecorator e ExameDecorator (Decoradores Concretos): São as classes que adicionam o comportamento extra. Elas herdam de ConsultaDecorator e, ao implementar executar(), primeiro chamam a implementação do objeto decorado e depois adicionam a sua própria lógica (que neste código de teste está vazia, mas numa aplicação real conteria a lógica de notificação ou de pedido de exame).
+
+Conclusão da Análise: A implementação está correta. Ela permite "empilhar" funcionalidades numa consulta base de forma flexível, evitando a criação de múltiplas subclasses para cada combinação de funcionalidades.
+
+3. Análise dos Testes Unitários
+O código utiliza uma abordagem de testes unitários para validar a implementação. A biblioteca <cassert> é usada para fazer as asserções.
+
+3.1. Testes do Padrão Factory Method
+teste_FactoryMethod_CriaRelatorioPacienteCorretamente(): Este teste verifica se a GeradorRelatorioPacienteFactory cria, de facto, um objeto do tipo RelatorioPaciente. Ele faz duas asserções:
+
+dynamic_cast<RelatorioPaciente*>(relatorio.get()) != nullptr: Confirma que o tipo dinâmico do objeto criado é RelatorioPaciente.
+
+relatorio->gerar() == "RelatorioPaciente": Confirma que o conteúdo gerado pelo objeto é o esperado.
+
+teste_FactoryMethod_CriaRelatorioFinanceiroCorretamente(): Segue a mesma lógica, mas para a fábrica e o relatório financeiros.
+
+Propósito: Estes testes garantem que cada fábrica está a cumprir o seu contrato de criar o tipo de objeto correto.
+
+3.2. Testes do Padrão Decorator
+Para testar o Decorator de forma eficaz, foi criada a classe MockConsulta. Um "mock" é um objeto simulado que permite verificar interações.
+
+MockConsulta: Esta classe herda de Consulta e a sua única função é registar se o seu método executar() foi chamado, através da flag booleana executadoChamado.
+
+teste_Decorator_ChamaMetodoDoObjetoEnvelopado(): O teste mais crucial para o Decorator. Ele cria um NotificacaoDecorator que "envelopa" um MockConsulta. Ao chamar decorator.executar(), o teste verifica se a flag executadoChamado no mock se tornou true.
+Propósito: Garantir que o decorador não se esquece de chamar o método do objeto original que está a decorar.
+
+teste_Decorator_EmpilhamentoFuncionaCorretamente(): Este teste cria uma Consulta com dois decoradores empilhados (ExameDecorator envolvendo um NotificacaoDecorator, que envolve um MockConsulta). Ele verifica se a chamada a executar() no topo da pilha é propagada até ao objeto base (MockConsulta).
+Propósito: Validar que a composição de múltiplos decoradores funciona como esperado.
+
+4. Função Principal (main) e Conclusão Geral
+A função main atua como o "corredor de testes" (Test Runner). Ela simplesmente chama cada uma das funções de teste em sequência. A mensagem final, "--- TODOS OS TESTES PASSARAM COM SUCESSO! ---", indica que todas as asserções em todos os testes foram executadas e validadas com sucesso.
+
+Em suma, o código-fonte analisado representa uma implementação robusta, limpa e corretamente validada dos padrões de projeto Factory Method e Decorator, seguindo as melhores práticas de teste para garantir o seu comportamento esperado.

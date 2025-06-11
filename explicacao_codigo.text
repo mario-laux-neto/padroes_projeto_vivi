@@ -1,65 +1,94 @@
-Padrões de Projeto em C++
+Demonstração de Padrões de Projeto em C++
+Este repositório contém uma implementação prática em C++ de dois padrões de projeto fundamentais: Factory Method e Decorator.
+O código utiliza um cenário de um sistema para uma clínica médica para ilustrar o uso e os benefícios de cada padrão.
 
-1. Introdução
 
-Este relatório apresenta uma análise técnica detalhada de um código-fonte C++ que demonstra a aplicação de 
-dois padrões de projeto essenciais: o Factory Method e o Decorator. O objetivo é dissecar a implementação de 
-cada padrão, a estrutura do código e a lógica da função principal (main), que serve como um cenário de 
-demonstração para validar visualmente o comportamento dos padrões. A análise fornecerá uma compreensão clara 
-da arquitetura do código e da sua conformidade com os princípios de cada padrão.
+Objetivo
+O principal objetivo deste projeto é fornecer um exemplo claro, didático e funcional de como aplicar padrões de projeto para
+resolver problemas comuns de design de software, como:
 
-2. Análise da Estrutura do Código-Fonte
+Desacoplar a criação de objetos do código cliente (Factory Method).
+Adicionar funcionalidades a objetos dinamicamente, sem alterar sua estrutura (Decorator).
 
-O código-fonte está claramente segmentado em três áreas principais:
-- Implementação do Padrão Factory Method: Classes responsáveis pela criação de diferentes tipos de objetos 
-Relatorio.
-- Implementação do Padrão Decorator: Classes que adicionam funcionalidades dinâmicas a objetos Consulta.
-- Função de Demonstração (main): O ponto de entrada do programa que executa e ilustra o uso prático dos padrões 
-implementados.
 
-2.1. Implementação do Padrão Factory Method
+Padrões de Projeto Implementados
 
-Este padrão é usado para delegar a responsabilidade de instanciação de objetos para subclasses, permitindo que 
-o sistema seja facilmente extensível com novos tipos de produtos.
-- Relatorio (Interface do Produto): Classe abstrata que estabelece a interface comum para todos os tipos de 
-relatório através do método virtual puro gerar().
-- RelatorioPaciente e RelatorioFinanceiro (Produtos Concretos): Implementações concretas que herdam de 
-Relatorio, fornecendo uma implementação específica para o método gerar().
-- GeradorRelatorioFactory (Interface da Fábrica): Classe abstrata que define o "método de fábrica", 
-criarRelatorio().
-- GeradorRelatorioPacienteFactory e GeradorRelatorioFinanceiroFactory (Fábricas Concretas): Subclasses que 
-implementam o método criarRelatorio(), retornando instâncias dos produtos concretos correspondentes.
+🏭 Factory Method
+O padrão Factory Method é utilizado para encapsular a criação de diferentes tipos de relatórios (Relatorio).
 
-Conclusão: A implementação adere ao padrão Factory Method, desacoplando o código cliente da lógica de 
-criação dos relatórios. Para adicionar um novo tipo de relatório, basta criar a classe e sua respectiva 
-fábrica sem modificar o código cliente existente.
+Relatorio: Interface abstrata para os produtos (relatórios).
 
-2.2. Implementação do Padrão Decorator
+RelatorioPaciente / RelatorioFinanceiro: Implementações concretas de relatórios.
 
-Este padrão é aplicado para adicionar novas responsabilidades a um objeto de forma dinâmica e flexível, sem 
-recorrer a herança para cada combinação de funcionalidade.
-- Consulta (Componente): Interface base para o objeto a ser decorado, define o método exibirDetalhes().
-- ConsultaBasica (Componente Concreto): Implementação fundamental de uma Consulta.
-- ConsultaDecorator (Decorador Abstrato): Herda de Consulta e contém um ponteiro para um objeto do tipo 
-Consulta, delegando chamadas ao objeto decorado.
-- NotificacaoDecorator e ExameDecorator (Decoradores Concretos): Adicionam comportamento extra, invocando o 
-método da classe pai e executando lógica adicional.
+GeradorRelatorioFactory: Interface da fábrica, que define o método criarRelatorio().
 
-Conclusão: A estrutura do Decorator foi implementada corretamente, permitindo que funcionalidades sejam 
-adicionadas de maneira modular e combinável.
+GeradorRelatorioPacienteFactory / GeradorRelatorioFinanceiroFactory: Fábricas concretas que instanciam os relatórios específicos.
 
-3. Análise da Demonstração na Função main
+Isso permite que o sistema crie diferentes relatórios sem que o código principal precise saber os detalhes de qual classe de relatório está sendo instanciada.
 
-A função main serve como um "script de demonstração" que ilustra o funcionamento e os benefícios de cada padrão.
-- Factory Method: Instancia GeradorRelatorioPacienteFactory e GeradorRelatorioFinanceiroFactory para criar e 
-gerar relatórios.
-- Decorator: Demonstra três cenários progressivos (Consulta Simples, Consulta com Lembrete, Consulta Completa).
 
-Propósito: Evidenciar como os padrões promovem flexibilidade e extensibilidade, validando visualmente os 
-comportamentos.
+✨ Decorator
+O padrão Decorator é usado para adicionar responsabilidades a uma Consulta de forma flexível e dinâmica.
 
-4. Conclusão Geral
+Consulta: A interface do componente base.
 
-O código implementa de forma exemplar os padrões Factory Method e Decorator, promovendo baixo acoplamento, 
-alta coesão e extensibilidade. A função main demonstra os benefícios práticos de cada padrão, tornando o 
-código uma referência clara para estudo e aplicação na engenharia de software.
+ConsultaBasica: O componente concreto inicial.
+
+ConsultaDecorator: O decorador abstrato que "envolve" um objeto Consulta.
+
+NotificacaoDecorator / ExameDecorator: Decoradores concretos que adicionam funcionalidades extras, como o envio de notificações ou a anexação de pedidos de exame.
+
+Essa abordagem evita a criação de uma infinidade de subclasses para cada combinação de funcionalidades (ex: ConsultaComNotificacao, ConsultaComExame, ConsultaComNotificacaoEExame, etc.).
+
+
+Como Compilar e Executar
+Pré-requisitos
+Um compilador C++ moderno (como g++ ou Clang) que suporte C++11 ou superior.
+
+Passos
+Clone o repositório:
+git clone https://github.com/mario-laux-neto/padroes_projeto_vivi.git
+
+Navegue até o diretório do projeto:
+cd padroes_projeto_vivi
+
+Compile o código-fonte:
+g++ -o demonstracao main.cpp -std=c++11
+
+Execute o programa:
+./demonstracao
+
+
+
+▶Saída Esperada
+Ao executar o programa, você verá a seguinte saída no terminal, demonstrando o funcionamento de cada padrão:
+
+--- DEMONSTRAÇÃO DOS PADRÕES DE PROJETO NO SISTEMA DA CLÍNICA ---
+
+
+--- 1. Testando o Padrão Factory Method ---
+
+Administrador solicitou um relatório de pacientes.
+Relatório de Pacientes: Gerando lista de pacientes atendidos no período...
+
+Administrador agora solicitou um relatório financeiro.
+Relatório Financeiro: Gerando fluxo de caixa, contas a pagar/receber...
+
+O Factory Method permitiu criar diferentes relatórios usando o mesmo tipo de interface, facilitando a extensibilidade.
+
+
+--- 2. Testando o Padrão Decorator ---
+
+Cenário 1: Agendamento de uma consulta simples.
+-> Consulta Básica agendada.
+
+Cenário 2: Agendamento de uma consulta com lembrete.
+-> Consulta Básica agendada.
+   [DECORATOR] Adicionada notificação por E-mail/WhatsApp.
+
+Cenário 3: Agendamento de consulta com lembrete e pedido de exame.
+-> Consulta Básica agendada.
+   [DECORATOR] Adicionada notificação por E-mail/WhatsApp.
+   [DECORATOR] Anexado pedido de exame(s).
+
+O Decorator permitiu adicionar funcionalidades a uma consulta de forma dinâmica e combinada.
